@@ -74,4 +74,4 @@ def predict():
 if __name__ == '__main__': 
     download_and_extract_model()  # Ensure the model is downloaded and extracted
     model = tf.keras.models.load_model(MODEL_PATH, compile=False)  # Load the model without compiling
-    app.run(debug=True)  # Start the Flask app
+    app.run(host="0.0.0.0", port=5000)  # Start the Flask app
