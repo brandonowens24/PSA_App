@@ -7,6 +7,8 @@ import numpy as np
 import zipfile
 import os
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 app = Flask(__name__)
 
 # GitHub Model URL
