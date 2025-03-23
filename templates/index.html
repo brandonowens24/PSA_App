@@ -4,49 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSA Grading Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: url('static/background.jpeg') repeat left top;
+            background-size: 150px 150px;
             text-align: center;
+            padding: 20px;
         }
-        form {
-            margin-top: 20px;
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+            position: relative;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        .upload-btn {
+            background: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: 0.3s;
+            display: inline-block;
+            position: relative;
+        }
+        .upload-btn:hover {
+            background: #0056b3;
+        }
+        .upload-btn input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        #preview {
+            margin-top: 15px;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+            display: none;
         }
         #result {
             margin-top: 20px;
+            font-weight: bold;
         }
-        #preview {
-            margin-top: 20px;
-            max-width: 300px;
-            display: none;
-            /* Center the image */
-            display: block;
-            margin: 20px auto;
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+            background: rgba(239, 237, 237, 0.97); /* partially transparent background */
+            padding: 10px 20px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        footer a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <h1>PSA Grading Tool</h1>
-    <p>Upload an image to predict the PSA grade of your card.</p>
-
-    <form id="uploadForm" action="/predict" method="POST" enctype="multipart/form-data">
-        <label for="file">Choose an image:</label>
-        <input type="file" name="file" id="file" required accept="image/*">
-        <br>
+    <div class="container">
+        <h1>PSA Grading Tool</h1>
+        <p>Upload an image to predict the PSA grade of your card.</p>
+        <div id="result">
+            <h2>Prediction Result</h2>
+            <pre id="prediction">Waiting for upload...</pre>
+        </div>
+        <label class="upload-btn">
+            Upload & Predict
+            <input type="file" id="file" accept="image/*">
+        </label>
         <img id="preview" alt="Image Preview">
-    </form>
-
-    <div id="result">
-        <h2>Prediction Result</h2>
-        <pre id="prediction"></pre>
     </div>
+
+    <footer>
+        <p>Powered by <a href="https://github.com/brandonowens24/PSA" target="_blank">PSA Predictor Model on GitHub</a></p>
+    </footer>
 
     <script>
         document.getElementById("file").addEventListener("change", async function(event) {
             const file = event.target.files[0];
-
             if (file) {
-                // Display image preview
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = document.getElementById("preview");
@@ -55,10 +117,8 @@
                 };
                 reader.readAsDataURL(file);
 
-                // Auto-upload the file
                 const formData = new FormData();
                 formData.append("file", file);
-
                 try {
                     const response = await fetch("/predict", {
                         method: "POST",
