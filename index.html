@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSA Grading Model Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PSA Grading Model Demo</h1>
+    <p>Upload an image to predict the PSA grade of your card.</p>
+
+    <form action="/predict" method="POST" enctype="multipart/form-data">
+        <label for="file">Choose an image:</label>
+        <input type="file" name="file" id="file" required>
+        <button type="submit">Upload Image</button>
+    </form>
+
+    <div id="result">
+        <h2>Prediction Result</h2>
+        <pre id="prediction"></pre>
+    </div>
+
+    <script>
+        // Optional: Add JS to handle form submission and display result dynamically
+        const form = document.querySelector("form");
+        form.onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const response = await fetch("/predict", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            document.getElementById("prediction").textContent = data.message || data.error;
+        };
+    </script>
+</body>
+</html>
